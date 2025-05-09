@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext } from 'react'
+import  { useState, useEffect,useContext } from 'react'
 import './PlaceOrder.css'
 import { StoreContext } from '../../Context/StoreContext'
 import axios from 'axios'
@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 const PlaceOrder = () => {
-  const {getTotalCartAmount,token,food_list,cartItems,url} =useContext(StoreContext);
+  const {getTotalCartAmount,token,food_list,cartItems,url,selectedNGO} =useContext(StoreContext);
   const [data,setData] = useState({
     firstName:"",
     lastName:"",
@@ -62,6 +62,14 @@ const PlaceOrder = () => {
     }
   },[token])
 
+  useEffect(() => {
+    if (selectedNGO) {
+      setData((prevData) => ({
+        ...prevData,
+        firstName: `NGO: ${selectedNGO}`,
+      }));
+    }
+  }, [selectedNGO]);
 
   return (
 
@@ -71,7 +79,7 @@ const PlaceOrder = () => {
         <p className="title">Delivery Information</p>
         <div className="multi-fields">
           <input required name='firstName' onChange={onChangeHandler} value={data.firstName} type="text" placeholder='First Name'/>
-          <input required name='lastName'onChange={onChangeHandler} value={data.lastName} type="text" placeholder='Last Name'/>
+          <input name='lastName'onChange={onChangeHandler} value={data.lastName} type="text" placeholder='Last Name'/>
         </div>
         <input required name='email' onChange={onChangeHandler} value={data.email}  type="email" placeholder='Email Address'/>
         <input  required name='street' onChange={onChangeHandler} value={data.street} type="text" placeholder='Street' />
