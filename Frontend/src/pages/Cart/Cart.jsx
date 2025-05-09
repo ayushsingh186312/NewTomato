@@ -33,11 +33,11 @@ const Cart = () => {
     setShowPromoDialog(false);
   };
   const salad = food_list
-  .filter((item) => (item.category === "Salad" ) && cartItems[item._id] > 0)
-  .reduce((count, item) => count + cartItems[item._id], 0);
+  .filter((item) => (item.category === "Salad" ) && cartItems?.[item._id] > 0)
+  .reduce((count, item) => count + (cartItems[item._id] || 0), 0);
   const pureveg = food_list
-  .filter((item) => (item.category === "Pure Veg" ) && cartItems[item._id] > 0)
-  .reduce((count, item) => count + cartItems[item._id], 0);
+  .filter((item) => (item.category === "Pure Veg" ) && cartItems?.[item._id] > 0)
+  .reduce((count, item) => count + (cartItems[item._id] || 0), 0);
   
     
   // Sample NGO data - replace with your actual data source

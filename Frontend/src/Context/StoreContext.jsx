@@ -16,24 +16,31 @@ const StoreContextProvider =(props)=>{
   
 
     const addToCart =async (itemId) =>{  
-        if (!cartItems[itemId]) {  
-            setCartItems((prev)=>({...prev,[itemId]:1}))  
-        }  
-        else {  
-            setCartItems((prev)=>({...prev,[itemId]:prev[itemId]+1}))  
-        } 
+        // if (!cartItems[itemId]) {  
+        //     setCartItems((prev)=>({...prev,[itemId]:1}))  
+        // }  
+        // else {  
+        //     setCartItems((prev)=>({...prev,[itemId]:prev[itemId]+1}))  
+        // } 
+        setCartItems((prev) => {
+        const currentCount = prev[itemId] || 0;
+        return {...prev, [itemId]: currentCount + 1};
+    });
         if (token){
             await axios.post(url+"/api/cart/add",{itemId},{headers:{token}})
         }
     }  
   
-    const removeFromCart = async(itemId) => {
-        setCartItems((prev)=>({...prev,[itemId]:prev[itemId]-1}))  
-        if (token) {
-            await axios.post(url+"/api/cart/remove",{itemId},{headers:{token}})
-        }
-    }  
-
+   const removeFromCart = async(itemId) => {
+    setCartItems((prev) => {
+        const currentCount = prev[itemId] || 0;
+        return {...prev, [itemId]: Math.max(currentCount - 1, 0)};
+    });
+    
+    if (token) {
+        await axios.post(url+"/api/cart/remove",{itemId},{headers:{token}})
+    }
+}
 
 
     const getTotalCartAmount=()=>{
@@ -53,9 +60,14 @@ const StoreContextProvider =(props)=>{
         setFoodList(response.data.data)
     }
     const loadCartData = async (token) => {
+    try {
         const response = await axios.post(url+"/api/cart/get",{},{headers:{token}});
-        setCartItems(response.data.cartData);
+        setCartItems(response.data.cartData || {});
+    } catch (error) {
+        console.error("Error loading cart data:", error);
+        setCartItems({});
     }
+}
 
     useEffect(()=>{
         async function loadData(){
@@ -67,6 +79,7 @@ const StoreContextProvider =(props)=>{
     }
     loadData();
     },[])
+  
 
     const contextValue = {  
         food_list,  
@@ -82,13 +95,12 @@ const StoreContextProvider =(props)=>{
         setSelectedNGO,
         selectedPromo,
         setSelectedPromo,
-  
-    } 
-    return (
-        <StoreContext.Provider value={contextValue}>
-            {props.children}
-        </StoreContext.Provider>
-    )
-}
-
+   
+    }  
+    return (  
+        <StoreContext.Provider value={contextValue}>  
+            {props.children}  
+        </StoreContext.Provider>  
+    ) 
+}  
 export default StoreContextProvider;
