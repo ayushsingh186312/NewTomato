@@ -4,10 +4,15 @@
     border-radius: 15px;  
     transition: 0.3s;  
     animation: fadeIn 1s;  
+    height: 100%; /* Add this for consistent height */
+    display: flex;
+    flex-direction: column;
 }
 .food-item-image{  
     width: 100%;  
     border-radius: 15px 15px 0px Өpx;  
+    object-fit: cover; /* Ensures consistent image display */
+    height: 200px; /* Set a fixed height for images */
 }  
 .food-item-info{  
     padding: 20px;  
@@ -15,7 +20,7 @@
 .food-item-name-rating{  
     display: flex;  
     justify-content: space-between;  
-    align-items: canter;  
+    align-items: center;  
     margin-bottom: 10px;  
 }
 .food-item-name-rating p{  
